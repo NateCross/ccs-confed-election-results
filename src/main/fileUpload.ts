@@ -13,7 +13,13 @@ async function handleWorkbookOpen(): Promise<any> {
   return null;
 }
 
+function testFunction(event: any, text: string) {
+  console.log(text)
+  return text;
+}
+
 export function handleIpcMain() {
   ipcMain.handle('dialog:openFile', handleWorkbookOpen);
+  ipcMain.handle('test:print', testFunction);
 
 }

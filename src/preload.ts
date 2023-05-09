@@ -11,4 +11,5 @@ contextBridge.exposeInMainWorld('api', {
       ...args: any[]
     ) => void,
   ) => ipcRenderer.on('data:get', callback),
+  testFunction: (text: string) => ipcRenderer.invoke('test:print', text),
 })
