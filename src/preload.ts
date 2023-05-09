@@ -12,4 +12,5 @@ contextBridge.exposeInMainWorld('api', {
     ) => void,
   ) => ipcRenderer.on('data:get', callback),
   testFunction: (text: string) => ipcRenderer.invoke('test:print', text),
+  refreshWorkbook: (path: string) => ipcRenderer.invoke('workbook:refresh', path),
 })
