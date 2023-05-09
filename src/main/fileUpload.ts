@@ -1,8 +1,7 @@
 import { dialog, ipcMain } from 'electron';
 import XLSX, { utils } from 'xlsx';
 
-// async function handleFileOpen(): Promise<string | null> {
-async function handleWorkbookOpen(): Promise<any> {
+async function handleWorkbookOpen(): Promise<Array<any>> {
   const { canceled, filePaths } = await dialog.showOpenDialog({
     properties: ['openFile'],
   });
@@ -25,13 +24,7 @@ async function handleWorkbookRefresh(event: any, path: string) {
   }
 }
 
-function testFunction(event: any, text: string) {
-  console.log(text)
-  return text;
-}
 export function handleIpcMain() {
   ipcMain.handle('dialog:openFile', handleWorkbookOpen);
-  ipcMain.handle('test:print', testFunction);
   ipcMain.handle('workbook:refresh', handleWorkbookRefresh);
-
 }

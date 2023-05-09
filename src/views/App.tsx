@@ -1,22 +1,33 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Chart as ChartJS,
   Title,
   ChartData,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Tooltip,
+  Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 
 ChartJS.register(
   Title,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Tooltip,
+  Legend,
 );
 
 export default function App() {
   const [workbookData, setWorkbookData] = useState([]);
   const [workbookPath, setWorkbookPath] = useState("");
-  const [testText, setTestText] = useState("");
   
-  const [chartData, setChartData] = useState<ChartData>();
+  // const [chartData, setChartData] = useState();
+  const [chartData, setChartData] = useState<ChartData<"bar">>();
   const [chartOptions, setChartOptions] = useState({
+    indexAxis: 'y' as const,
     plugins: {
       title: {
         display: true,
@@ -27,12 +38,17 @@ export default function App() {
     scales: {
       x: {
         stacked: true,
+        
       },
       y: {
         stacked: true,
       },
     },
   });
+
+  useEffect(() => {
+    processChartData();
+  }, [workbookData]);
 
   async function workbookReadHandler() {
     try {
@@ -49,7 +65,6 @@ export default function App() {
       const data = await (window as any).api.refreshWorkbook(workbookPath);
       setWorkbookData(data);
 
-      console.log(data);
     } catch (e) {
       console.log(e);
     }
@@ -57,13 +72,76 @@ export default function App() {
 
   function processChartData() {
     try {
-      const labels = ['1', '2', '3'];
+      const labels = [
+        'Governor',
+        'Vice Governor',
+        'Secretary',
+        'Treasurer',
+        'Auditor',
+        'PRO',
+      ];
+      const workbookColumns = [
+        'Select a Governor',
+        'Select a Vice Governor',
+        'Select a Secretary',
+        'Select a Treasurer',
+        'Select an Auditor',
+        'Select a Press Relation Officer (P.R.O.)',
+      ];
+      const workbookColumnsOutput = [
+        'Governor',
+        'Vice Governor',
+        'Secretary',
+        'Treasurer',
+        'Auditor',
+        'P.R.O.',
+      ];
+
+      const semicolonPartyLabels = [
+        'DASIG, John Westen Rey (Semicolon Party)',
+        'BADON, Raven Vera (Semicolon Party)',
+        'ALTONAGA, John Stanley (Semicolon Party)',
+        'PEREZ, Greleen (Semicolon Party)',
+        'MALTO, Lanz Alexander (Semicolon Party)',
+        'JUGAR, Pete Aejosh (Semicolon)',
+      ];
+      const signalPartyLabels = [
+        'GAUDAN, Gianne Guenter (Signal Party)',
+        'JALANDONI, Jea Katrina (Signal Party)',
+        'TE, Alexandra Margaret (Signal Party)',
+        'OLICIA, Samantha Kyle (Signal Party)',
+        'DE JESUS, Giancarlo (Signal Party)',
+        'PATALAN, Jozua Fabillar (Signal Party)',
+      ];
+
+      const filteredColumns = workbookColumns.map((value) => (
+        (workbookData.map((dataValue) => dataValue[value]))
+      ));
+
+      const semicolonPartyTotals = filteredColumns.map((value, index) => (
+        value.reduce((acc, curr) => (
+          (curr === semicolonPartyLabels[index]) ? ++acc : acc
+        ), 0)
+      ));
+      const signalPartyTotals = filteredColumns.map((value, index) => (
+        value.reduce((acc, curr) => (
+          (curr === signalPartyLabels[index]) ? ++acc : acc
+        ), 0)
+      ));
 
       setChartData({
         labels,
         datasets: [
-          // Fill in data sets based on party here
-          // See: https://codesandbox.io/s/github/reactchartjs/react-chartjs-2/tree/master/sandboxes/bar/stacked?from-embed=&file=/App.tsx
+          {
+            label: 'Semicolon',
+            data: semicolonPartyTotals,
+            backgroundColor: 'rgb(128, 0, 0)'
+          },
+          {
+            label: 'Signal',
+            data: signalPartyTotals,
+            backgroundColor: 'rgb(0, 0, 128)'
+          }
         ],
       });
     } catch (e) {
@@ -89,26 +167,13 @@ export default function App() {
         </button>
       </div>
     )}
-    {workbookData && (
+    {chartData && (
       <div className="sheet-results-container">
         <Bar
-          data
-        >
-
-        </Bar>
-
+          data={chartData}
+          options={chartOptions}
+        />
       </div>
     )}
-    {/* <div className="">
-      <input type="text" onChange={(e) => setTestText(e.target.value)} />
-      <input 
-        type="submit" 
-        value="Submit" 
-        onClick={async (e) => {
-          e.preventDefault();
-          console.log(await (window as any).api.testFunction(testText));
-        }}
-      />
-    </div> */}
   </>
 }
