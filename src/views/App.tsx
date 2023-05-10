@@ -19,6 +19,54 @@ ChartJS.register(
 
 // CHANGE ME
 const MAX_VOTERS = 10;
+const LABELS = [
+  'Governor',
+  'Vice Governor',
+  'Secretary',
+  'Treasurer',
+  'Auditor',
+  'P.R.O.',
+];
+const WORKBOOK_COLUMNS = [
+  'Select a Governor',
+  'Select a Vice Governor',
+  'Select a Secretary',
+  'Select a Treasurer',
+  'Select an Auditor',
+  'Select a Press Relation Officer (P.R.O.)',
+];
+const SEMICOLON_PARTY_LABELS = [
+  'DASIG, John Westen Rey (Semicolon Party)',
+  'BADON, Raven Vera (Semicolon Party)',
+  'ALTONAGA, John Stanley (Semicolon Party)',
+  'PEREZ, Greleen (Semicolon Party)',
+  'MALTO, Lanz Alexander (Semicolon Party)',
+  'JUGAR, Pete Aejosh (Semicolon)',
+];
+const SEMICOLON_PARTY_NAMES = [
+  'Dasig',
+  'Badon',
+  'Altonaga',
+  'Perez',
+  'Malto',
+  'Jugar',
+];
+const SIGNAL_PARTY_LABELS = [
+  'GAUDAN, Gianne Guenter (Signal Party)',
+  'JALANDONI, Jea Katrina (Signal Party)',
+  'TE, Alexandra Margaret (Signal Party)',
+  'OLICIA, Samantha Kyle (Signal Party)',
+  'DE JESUS, Giancarlo (Signal Party)',
+  'PATALAN, Jozua Fabillar (Signal Party)',
+];
+const SIGNAL_PARTY_NAMES = [
+  'Gaudan',
+  'Jalandoni',
+  'Te',
+  'Olicia',
+  'De Jesus',
+  'Patalan',
+];
 
 export default function App() {
   const [workbookData, setWorkbookData] = useState([]);
@@ -133,60 +181,18 @@ export default function App() {
 
   function processChartData() {
     try {
-      const labels = [
-        'Governor',
-        'Vice Governor',
-        'Secretary',
-        'Treasurer',
-        'Auditor',
-        'PRO',
-      ];
-      const workbookColumns = [
-        'Select a Governor',
-        'Select a Vice Governor',
-        'Select a Secretary',
-        'Select a Treasurer',
-        'Select an Auditor',
-        'Select a Press Relation Officer (P.R.O.)',
-      ];
-      const workbookColumnsOutput = [
-        'Governor',
-        'Vice Governor',
-        'Secretary',
-        'Treasurer',
-        'Auditor',
-        'P.R.O.',
-      ];
-
-      const semicolonPartyLabels = [
-        'DASIG, John Westen Rey (Semicolon Party)',
-        'BADON, Raven Vera (Semicolon Party)',
-        'ALTONAGA, John Stanley (Semicolon Party)',
-        'PEREZ, Greleen (Semicolon Party)',
-        'MALTO, Lanz Alexander (Semicolon Party)',
-        'JUGAR, Pete Aejosh (Semicolon)',
-      ];
-      const signalPartyLabels = [
-        'GAUDAN, Gianne Guenter (Signal Party)',
-        'JALANDONI, Jea Katrina (Signal Party)',
-        'TE, Alexandra Margaret (Signal Party)',
-        'OLICIA, Samantha Kyle (Signal Party)',
-        'DE JESUS, Giancarlo (Signal Party)',
-        'PATALAN, Jozua Fabillar (Signal Party)',
-      ];
-
-      const filteredColumns = workbookColumns.map((value) => (
+      const filteredColumns = WORKBOOK_COLUMNS.map((value) => (
         (workbookData.map((dataValue) => dataValue[value]))
       ));
 
       const semicolonPartyTotals = filteredColumns.map((value, index) => (
         value.reduce((acc, curr) => (
-          (curr === semicolonPartyLabels[index]) ? ++acc : acc
+          (curr === SEMICOLON_PARTY_LABELS[index]) ? ++acc : acc
         ), 0)
       ));
       const signalPartyTotals = filteredColumns.map((value, index) => (
         value.reduce((acc, curr) => (
-          (curr === signalPartyLabels[index]) ? ++acc : acc
+          (curr === SIGNAL_PARTY_LABELS[index]) ? ++acc : acc
         ), 0)
       ));
       const votesTotal = filteredColumns.map((value, index) => (
@@ -200,7 +206,7 @@ export default function App() {
       ));
 
       setChartData({
-        labels,
+        labels: LABELS,
         datasets: [
           {
             label: 'Signal',
@@ -257,21 +263,21 @@ export default function App() {
         </button>
       </div>
     )}
-    {workbookData && chartData && (
+    {(workbookData.length && chartData) ? (
       <div className="sheet-results-container">
         <Bar
           data={chartData}
           options={chartOptions}
         />
       </div>
-    )}
-    {workbookData && voteProgressBarData && (
+    ) : null}
+    {(workbookData.length && voteProgressBarData) ? (
       <div className="vote-progress-container">
         <Bar
           data={voteProgressBarData}
           options={voteProgressBarOptions}
         />
       </div>
-    )}
+    ) : null}
   </>
 }

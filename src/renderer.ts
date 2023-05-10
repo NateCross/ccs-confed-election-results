@@ -26,6 +26,7 @@
  * ```
  */
 
+import './reset.css';
 import './index.css';
 import './views/index';
 
