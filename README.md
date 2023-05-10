@@ -4,10 +4,9 @@ This simple Electron app aims to display a live tally of the election results as
 
 # Usage
 
-TODO: Make usage
-
 - Point to a spreadsheet file
 - Watch as it live updates the graph when the spreadsheet changes
+- When you change a file, click the Refresh button
 
 # Developing
 
