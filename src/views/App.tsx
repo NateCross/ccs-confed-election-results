@@ -12,13 +12,13 @@ import {
 import { Bar } from 'react-chartjs-2';
 
 ChartJS.register(
-  Title,
   CategoryScale,
   LinearScale,
   BarElement,
-  Tooltip,
-  Legend,
 );
+
+// CHANGE ME
+const MAX_VOTERS = 400;
 
 export default function App() {
   const [workbookData, setWorkbookData] = useState([]);
@@ -33,15 +33,41 @@ export default function App() {
         display: true,
         text: 'Results',
       },
+      legend: {
+        display: false,
+      },
     },
     responsive: true,
     scales: {
       x: {
         stacked: true,
-        
+        grid: {
+          display: false,
+        },
+        border: {
+          display: false,
+        },
+        ticks: {
+          display: false,
+        },
       },
       y: {
         stacked: true,
+        grid: {
+          display: false,
+        },
+        border: {
+          display: false,
+        },
+        ticks: {
+          display: false,
+        },
+      },
+    },
+    elements: {
+      bar: {
+        barPercentage: 1.0,
+        categoryPercentage: 1.0,
       },
     },
   });
@@ -133,15 +159,15 @@ export default function App() {
         labels,
         datasets: [
           {
-            label: 'Semicolon',
-            data: semicolonPartyTotals,
-            backgroundColor: 'rgb(128, 0, 0)'
-          },
-          {
             label: 'Signal',
             data: signalPartyTotals,
-            backgroundColor: 'rgb(0, 0, 128)'
-          }
+            backgroundColor: '#ED81FF',
+          },
+          {
+            label: 'Semicolon',
+            data: semicolonPartyTotals,
+            backgroundColor: '#B20000',
+          },
         ],
       });
     } catch (e) {
@@ -150,7 +176,7 @@ export default function App() {
   }
 
   return <>
-    <h1>Results</h1>
+    <h1>CCS Confed Election 2023 Results</h1>
     <div className="button-container">
       <button
         onClick={workbookReadHandler}
@@ -167,7 +193,7 @@ export default function App() {
         </button>
       </div>
     )}
-    {chartData && (
+    {workbookData && chartData && (
       <div className="sheet-results-container">
         <Bar
           data={chartData}
