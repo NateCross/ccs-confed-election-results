@@ -247,13 +247,15 @@ export default function App() {
 
   return <>
     <h1>CCS Confed Election 2023 Results</h1>
-    <div className="button-container">
-      <button
-        onClick={workbookReadHandler}
-      >
-        Read Workbook
-      </button>
-    </div>
+    {!workbookData.length ? (
+      <div className="button-container">
+        <button
+          onClick={workbookReadHandler}
+        >
+          Read Workbook
+        </button>
+      </div>
+    ) : null}
     {workbookPath && (
       <div className="refresh-container">
         <button
@@ -263,21 +265,23 @@ export default function App() {
         </button>
       </div>
     )}
-    {(workbookData.length && chartData) ? (
-      <div className="sheet-results-container">
-        <Bar
-          data={chartData}
-          options={chartOptions}
-        />
-      </div>
-    ) : null}
-    {(workbookData.length && voteProgressBarData) ? (
-      <div className="vote-progress-container">
-        <Bar
-          data={voteProgressBarData}
-          options={voteProgressBarOptions}
-        />
-      </div>
-    ) : null}
+    <main>
+      {(workbookData.length && chartData) ? (
+        <div className="sheet-results-container">
+          <Bar
+            data={chartData}
+            options={chartOptions}
+          />
+        </div>
+      ) : null}
+      {(workbookData.length && voteProgressBarData) ? (
+        <div className="vote-progress-container">
+          <Bar
+            data={voteProgressBarData}
+            options={voteProgressBarOptions}
+          />
+        </div>
+      ) : null}
+    </main>
   </>
 }

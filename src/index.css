@@ -22,7 +22,7 @@ h1 {
   text-transform: uppercase;
 }
 
-.button-container {
+.button-container, .refresh-container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,6 +37,7 @@ button {
   text-transform: uppercase;
   padding: 0.5rem;
   font-weight: 500;
+  cursor: pointer;
   
   transition: 0.25s all ease-in-out;
 }
