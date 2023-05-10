@@ -12,6 +12,7 @@ body {
   padding: 2rem;
 
   min-height: 100%;
+  overflow: hidden;
 }
 
 h1 {
@@ -39,7 +40,7 @@ button {
   padding: 0.5rem;
   font-weight: 500;
   cursor: pointer;
-  
+
   transition: 0.25s all ease-in-out;
 }
 
@@ -53,14 +54,16 @@ button:hover {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  
+
   width: 100%;
-  height: 100%;
+  height: 70vh;
+  /* height: 100%; */
 }
 
 .results-center-container {
   width: 90%;
-  height: 82vh;
+  height: 69vh;
+  /* height: 82vh; */
   position: relative;
 }
 
@@ -82,7 +85,7 @@ img {
   flex-direction: column;
   text-align: right;
   width: 100%;
-  margin: 1rem;
+  margin: 0.4rem;
 }
 
 .candidate-text-container-reversed {
@@ -102,12 +105,31 @@ img {
   font-size: 1.25rem;
 }
 
-/* .candidate */
+.candidate-image {
+  border-radius: 50%;
+  border: 0.2rem solid #292D32;
+}
 
-/* body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif;
-  margin: auto;
-  max-width: 38rem;
-  padding: 2rem;
-} */
+.vote-progress-container {
+  height: 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vote-progress-bar-container {
+  height: 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.vote-progress-text-container {
+  margin: 0.5rem;
+}
+
+.vote-progress-main-text {
+  font-weight: 700;
+  line-height: 1.5rem;
+}

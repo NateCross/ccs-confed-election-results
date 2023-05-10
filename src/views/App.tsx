@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import {
   Chart as ChartJS,
-  Title,
   ChartData,
   CategoryScale,
   LinearScale,
   BarElement,
-  Tooltip,
-  Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import Candidate from './components/Candidate';
+import Annotation from 'chartjs-plugin-annotation';
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  Annotation,
 );
 
 // CHANGE ME
 const MAX_VOTERS = 10;
+
 const LABELS = [
   'Governor',
   'Vice Governor',
@@ -76,13 +76,6 @@ export default function App() {
   const [chartData, setChartData] = useState<ChartData<"bar">>();
   const [chartOptions, setChartOptions] = useState({
     indexAxis: 'y' as const,
-    // barPercentage: 1.0,
-    // categoryPercentage: 0.1,
-    // barThickness: 50,
-    // borderColor: "rgba(0,0,0,0)",
-    // borderWidth: 10,
-    // barThickness: 50,
-    // maxBarThickness: 50,
     maintainAspectRatio: false,
     plugins: {
       title: {
@@ -92,6 +85,18 @@ export default function App() {
       legend: {
         display: false,
       },
+      annotation: {
+        annotations: {
+          line: {
+            type: 'line',
+            mode: 'vertical',
+            xMin: 0.5,
+            xMax: 0.5,
+            borderColor: 'black',
+            borderWidth: 2,
+          }
+        }
+      }
     },
     responsive: true,
     scales: {
@@ -125,6 +130,7 @@ export default function App() {
   const [voteProgressBarData, setVoteProgressBarData] = useState<ChartData<"bar">>();
   const [voteProgressBarOptions, setVoteProgressBarOptions] = useState({
     indexAxis: 'y' as const,
+    maintainAspectRatio: false,
     plugins: {
       title: {
         display: true,
@@ -173,9 +179,6 @@ export default function App() {
   useEffect(() => {
     loadCandidateImages();
   }, []);
-  useEffect(() => {
-    console.log(candidateImages);
-  }, [candidateImages]);
 
   async function workbookReadHandler() {
     try {
@@ -282,28 +285,7 @@ export default function App() {
   }
 
   return <>
-    {/* {candidateImages.length ? (
-      <img src={candidateImages[1][0].default} alt="" />
-    ) : null} */}
     <h1>CCS Confed Election 2023 Results</h1>
-    {!workbookData.length ? (
-      <div className="button-container">
-        <button
-          onClick={workbookReadHandler}
-        >
-          Read Workbook
-        </button>
-      </div>
-    ) : null}
-    {workbookPath && (
-      <div className="refresh-container">
-        <button
-          onClick={workbookRefreshHandler}
-        >
-          Refresh
-        </button>
-      </div>
-    )}
     <main>
       {(workbookData.length && chartData) ? (
         <div className="sheet-results-container">
@@ -320,7 +302,7 @@ export default function App() {
           <div className="results-center-container">
             <Bar
               data={chartData}
-              options={chartOptions}
+              options={chartOptions as any}
             />
           </div>
           <div className="results-right-container">
@@ -339,12 +321,40 @@ export default function App() {
       ) : null}
       {(workbookData.length && voteProgressBarData) ? (
         <div className="vote-progress-container">
-          <Bar
-            data={voteProgressBarData}
-            options={voteProgressBarOptions}
-          />
+          <div className="vote-progress-text-container">
+            <p className="vote-progress-main-text">
+              Total Votes Checked
+            </p>
+            <p className="vote-progress-numbers">
+              {workbookData.length / MAX_VOTERS * 100}% ({workbookData.length} out of {MAX_VOTERS}) 
+            </p>
+          </div>
+          <div className="vote-progress-bar-container">
+            <Bar
+              data={voteProgressBarData}
+              options={voteProgressBarOptions}
+            />
+          </div>
         </div>
       ) : null}
     </main>
+    {!workbookData.length ? (
+      <div className="button-container">
+        <button
+          onClick={workbookReadHandler}
+        >
+          Read Workbook
+        </button>
+      </div>
+    ) : null}
+    {workbookPath && (
+      <div className="refresh-container">
+        <button
+          onClick={workbookRefreshHandler}
+        >
+          Refresh
+        </button>
+      </div>
+    )}
   </>
 }
