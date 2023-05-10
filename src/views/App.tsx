@@ -154,10 +154,18 @@ export default function App() {
     },
   });
 
+  const [candidateImages, setCandidateImages] = useState([]);
+
   useEffect(() => {
     processChartData();
     processVoteProgressBar();
   }, [workbookData]);
+  useEffect(() => {
+    loadCandidateImages();
+  }, []);
+  useEffect(() => {
+    console.log(candidateImages);
+  }, [candidateImages]);
 
   async function workbookReadHandler() {
     try {
@@ -245,7 +253,25 @@ export default function App() {
     }
   }
 
+  function getCandidateImage(name: string, extension: string) {
+    return import(`../assets/${name.toUpperCase()}.${extension.toLowerCase()}`)
+  }
+
+  async function loadCandidateImages() {
+    try {
+      setCandidateImages([
+        await Promise.all(SIGNAL_PARTY_NAMES.map(async (value) => getCandidateImage(value, 'png'))),
+        await Promise.all(SEMICOLON_PARTY_NAMES.map(async (value) => getCandidateImage(value, 'jpeg'))),
+      ]);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return <>
+    {candidateImages.length ? (
+      <img src={candidateImages[0][0].default} alt="" />
+    ) : null}
     <h1>CCS Confed Election 2023 Results</h1>
     {!workbookData.length ? (
       <div className="button-container">
