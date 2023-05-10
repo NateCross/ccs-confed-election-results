@@ -18,13 +18,12 @@ ChartJS.register(
 );
 
 // CHANGE ME
-const MAX_VOTERS = 400;
+const MAX_VOTERS = 10;
 
 export default function App() {
   const [workbookData, setWorkbookData] = useState([]);
   const [workbookPath, setWorkbookPath] = useState("");
-  
-  // const [chartData, setChartData] = useState();
+
   const [chartData, setChartData] = useState<ChartData<"bar">>();
   const [chartOptions, setChartOptions] = useState({
     indexAxis: 'y' as const,
@@ -64,16 +63,52 @@ export default function App() {
         },
       },
     },
-    elements: {
-      bar: {
-        barPercentage: 1.0,
-        categoryPercentage: 1.0,
+  });
+
+  const [voteProgressBarData, setVoteProgressBarData] = useState<ChartData<"bar">>();
+  const [voteProgressBarOptions, setVoteProgressBarOptions] = useState({
+    indexAxis: 'y' as const,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Results',
+      },
+      legend: {
+        display: false,
+      },
+    },
+    responsive: true,
+    scales: {
+      x: {
+        stacked: true,
+        grid: {
+          display: false,
+        },
+        border: {
+          display: false,
+        },
+        ticks: {
+          display: false,
+        },
+      },
+      y: {
+        stacked: true,
+        grid: {
+          display: false,
+        },
+        border: {
+          display: false,
+        },
+        ticks: {
+          display: false,
+        },
       },
     },
   });
 
   useEffect(() => {
     processChartData();
+    processVoteProgressBar();
   }, [workbookData]);
 
   async function workbookReadHandler() {
@@ -154,19 +189,48 @@ export default function App() {
           (curr === signalPartyLabels[index]) ? ++acc : acc
         ), 0)
       ));
+      const votesTotal = filteredColumns.map((value, index) => (
+        semicolonPartyTotals[index] + signalPartyTotals[index]
+      ));
+      const semicolonPartyPercent = semicolonPartyTotals.map((value, index) => (
+        value / votesTotal[index]
+      ));
+      const signalPartyPercent = signalPartyTotals.map((value, index) => (
+        value / votesTotal[index]
+      ));
 
       setChartData({
         labels,
         datasets: [
           {
             label: 'Signal',
-            data: signalPartyTotals,
+            data: signalPartyPercent,
             backgroundColor: '#ED81FF',
           },
           {
             label: 'Semicolon',
-            data: semicolonPartyTotals,
+            data: semicolonPartyPercent,
             backgroundColor: '#B20000',
+          },
+        ],
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  function processVoteProgressBar() {
+    try {
+      setVoteProgressBarData({
+        labels: [0],
+        datasets: [
+          {
+            data: [workbookData.length / MAX_VOTERS],
+            backgroundColor: '#333333',
+          },
+          {
+            data: [1 - workbookData.length / MAX_VOTERS],
+            backgroundColor: '#D9D9D9',
           },
         ],
       });
@@ -198,6 +262,14 @@ export default function App() {
         <Bar
           data={chartData}
           options={chartOptions}
+        />
+      </div>
+    )}
+    {workbookData && voteProgressBarData && (
+      <div className="vote-progress-container">
+        <Bar
+          data={voteProgressBarData}
+          options={voteProgressBarOptions}
         />
       </div>
     )}
