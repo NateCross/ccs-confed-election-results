@@ -20,6 +20,7 @@ h1 {
   font-size: 60px;
   line-height: 73px;
   text-transform: uppercase;
+  text-align: center;
 }
 
 .button-container, .refresh-container {
@@ -45,8 +46,63 @@ button {
 button:hover {
   color: white;
   background-color: black;
-  
 }
+
+.sheet-results-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  
+  width: 100%;
+  height: 100%;
+}
+
+.results-center-container {
+  width: 90%;
+  height: 82vh;
+  position: relative;
+}
+
+img {
+  width: 80px;
+  height: 80px;
+}
+
+.candidate-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.candidate-text-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  flex-direction: column;
+  text-align: right;
+  width: 100%;
+  margin: 1rem;
+}
+
+.candidate-text-container-reversed {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.candidate-name {
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 3rem;
+  text-transform: uppercase;
+}
+
+.candidate-vote-total {
+  line-height: 2rem;
+  font-size: 1.25rem;
+}
+
+/* .candidate */
 
 /* body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,

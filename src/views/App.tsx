@@ -10,6 +10,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import Candidate from './components/Candidate';
 
 ChartJS.register(
   CategoryScale,
@@ -75,6 +76,14 @@ export default function App() {
   const [chartData, setChartData] = useState<ChartData<"bar">>();
   const [chartOptions, setChartOptions] = useState({
     indexAxis: 'y' as const,
+    // barPercentage: 1.0,
+    // categoryPercentage: 0.1,
+    // barThickness: 50,
+    // borderColor: "rgba(0,0,0,0)",
+    // borderWidth: 10,
+    // barThickness: 50,
+    // maxBarThickness: 50,
+    maintainAspectRatio: false,
     plugins: {
       title: {
         display: true,
@@ -155,6 +164,7 @@ export default function App() {
   });
 
   const [candidateImages, setCandidateImages] = useState([]);
+  const [partyTotals, setPartyTotals] = useState([]);
 
   useEffect(() => {
     processChartData();
@@ -203,6 +213,9 @@ export default function App() {
           (curr === SIGNAL_PARTY_LABELS[index]) ? ++acc : acc
         ), 0)
       ));
+
+      setPartyTotals([signalPartyTotals, semicolonPartyTotals]);
+
       const votesTotal = filteredColumns.map((value, index) => (
         semicolonPartyTotals[index] + signalPartyTotals[index]
       ));
@@ -269,9 +282,9 @@ export default function App() {
   }
 
   return <>
-    {candidateImages.length ? (
-      <img src={candidateImages[0][0].default} alt="" />
-    ) : null}
+    {/* {candidateImages.length ? (
+      <img src={candidateImages[1][0].default} alt="" />
+    ) : null} */}
     <h1>CCS Confed Election 2023 Results</h1>
     {!workbookData.length ? (
       <div className="button-container">
@@ -294,10 +307,34 @@ export default function App() {
     <main>
       {(workbookData.length && chartData) ? (
         <div className="sheet-results-container">
-          <Bar
-            data={chartData}
-            options={chartOptions}
-          />
+          <div className="results-left-container">
+            {SIGNAL_PARTY_NAMES.map((value, index) => (
+              <Candidate 
+                name={value}
+                imagePath={candidateImages[0][index].default}
+                voteTotal={partyTotals[0][index]}
+                key={value}
+              />
+            ))}
+          </div>
+          <div className="results-center-container">
+            <Bar
+              data={chartData}
+              options={chartOptions}
+            />
+          </div>
+          <div className="results-right-container">
+            {SEMICOLON_PARTY_NAMES.map((value, index) => (
+              <Candidate 
+                name={value}
+                imagePath={candidateImages[1][index].default}
+                voteTotal={partyTotals[1][index]}
+                reversed
+                key={value}
+              />
+            ))}
+
+          </div>
         </div>
       ) : null}
       {(workbookData.length && voteProgressBarData) ? (
