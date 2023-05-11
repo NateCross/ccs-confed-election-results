@@ -5,12 +5,12 @@ import { contextBridge, ipcRenderer } from "electron"
 // TODO: https://www.electronjs.org/docs/latest/tutorial/ipc#pattern-3-main-to-renderer
 contextBridge.exposeInMainWorld('api', {
   openFile: () => ipcRenderer.invoke('dialog:openFile'),
-  getData: (
+  autorefreshWorkbook: (
     callback: (
       event: Electron.IpcRendererEvent, 
       ...args: any[]
     ) => void,
-  ) => ipcRenderer.on('data:get', callback),
+  ) => ipcRenderer.on('workbook:autorefresh', callback),
   testFunction: (text: string) => ipcRenderer.invoke('test:print', text),
   refreshWorkbook: (path: string) => ipcRenderer.invoke('workbook:refresh', path),
 })

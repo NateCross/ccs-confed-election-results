@@ -18,7 +18,7 @@ ChartJS.register(
 );
 
 // CHANGE ME
-const MAX_VOTERS = 10;
+const MAX_VOTERS = 400;
 
 const LABELS = [
   'Governor',
@@ -284,6 +284,14 @@ export default function App() {
     }
   }
 
+  (window as any).api.autorefreshWorkbook((event: any, value: any) => {
+    try {
+      setWorkbookData(value);
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
   return <>
     <h1>CCS Confed Election 2023 Results</h1>
     <main>
@@ -347,7 +355,7 @@ export default function App() {
         </button>
       </div>
     ) : null}
-    {workbookPath && (
+    {/* {workbookPath && (
       <div className="refresh-container">
         <button
           onClick={workbookRefreshHandler}
@@ -355,6 +363,6 @@ export default function App() {
           Refresh
         </button>
       </div>
-    )}
+    )} */}
   </>
 }
