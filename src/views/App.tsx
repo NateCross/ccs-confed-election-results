@@ -322,7 +322,7 @@ export default function App() {
               Total Votes Checked
             </p>
             <p className="vote-progress-numbers">
-              {workbookData.length / MAX_VOTERS * 100}% ({workbookData.length} out of {MAX_VOTERS}) 
+              {(workbookData.length / MAX_VOTERS * 100).toFixed(2)}% ({workbookData.length} out of {MAX_VOTERS}) 
             </p>
           </div>
           <div className="vote-progress-bar-container">
