@@ -13,7 +13,7 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-const createWindow = (): BrowserWindow => {
+const createWindow = (): void => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,

@@ -71,10 +71,9 @@ const SIGNAL_PARTY_NAMES = [
 
 export default function App() {
   const [workbookData, setWorkbookData] = useState([]);
-  const [workbookPath, setWorkbookPath] = useState("");
 
   const [chartData, setChartData] = useState<ChartData<"bar">>();
-  const [chartOptions, setChartOptions] = useState({
+  const [chartOptions, _] = useState({
     indexAxis: 'y' as const,
     maintainAspectRatio: false,
     plugins: {
@@ -128,7 +127,7 @@ export default function App() {
   });
 
   const [voteProgressBarData, setVoteProgressBarData] = useState<ChartData<"bar">>();
-  const [voteProgressBarOptions, setVoteProgressBarOptions] = useState({
+  const [voteProgressBarOptions, __] = useState({
     indexAxis: 'y' as const,
     maintainAspectRatio: false,
     plugins: {
@@ -182,19 +181,8 @@ export default function App() {
 
   async function workbookReadHandler() {
     try {
-      const [data, path] = await (window as any).api.openFile();
+      const data = await (window as any).api.openFile();
       setWorkbookData(data);
-      setWorkbookPath(path);
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  async function workbookRefreshHandler() {
-    try {
-      const data = await (window as any).api.refreshWorkbook(workbookPath);
-      setWorkbookData(data);
-
     } catch (e) {
       console.log(e);
     }
@@ -355,14 +343,5 @@ export default function App() {
         </button>
       </div>
     ) : null}
-    {/* {workbookPath && (
-      <div className="refresh-container">
-        <button
-          onClick={workbookRefreshHandler}
-        >
-          Refresh
-        </button>
-      </div>
-    )} */}
   </>
 }

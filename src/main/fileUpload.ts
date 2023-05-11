@@ -18,10 +18,9 @@ function handleWorkbookOpen(window: BrowserWindow): any {
 
       watcher.on('change', path => handleWorkbookAutoRefresh(window, path));
 
-      return [
-        utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]),
-        filePaths[0],
-      ];
+      return (
+        utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
+      );
     }
     return null;
   }
@@ -37,16 +36,6 @@ async function handleWorkbookAutoRefresh(mainWindow: BrowserWindow, path: string
   }
 }
 
-async function handleWorkbookRefresh(event: any, path: string) {
-  try {
-    const workbook = XLSX.readFile(path);
-    return utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
 export function handleIpcMain(window: BrowserWindow) {
   ipcMain.handle('dialog:openFile', handleWorkbookOpen(window));
-  ipcMain.handle('workbook:refresh', handleWorkbookRefresh);
 }
